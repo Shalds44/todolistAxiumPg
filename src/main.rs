@@ -3,6 +3,10 @@ use axum::{
 };
 use tokio_postgres::{NoTls, Error};
 
+const CONN_STRING:&str = "host=localhost user=postgres password=password port=5432 dbname=student connect_timeout=10";
+
+
+
 #[tokio::main]
 async fn main() {
     // build our application with a single route
@@ -27,10 +31,9 @@ async fn handler_about() -> Html<&'static str>{
 }
 
 async fn handler_json() -> Json<String>{
-    let conn_string = "host=localhost user=postgres password=password port=5432 dbname=student connect_timeout=10";
 
     let (client, connection) =
-        tokio_postgres::connect(conn_string, NoTls).await.unwrap();
+        tokio_postgres::connect(CONN_STRING, NoTls).await.unwrap();
 
     tokio::spawn(async move {
         if let Err(e) = connection.await {
